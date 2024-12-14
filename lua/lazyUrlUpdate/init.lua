@@ -16,6 +16,8 @@ local function update_plugin()
   end
 end
 
-vim.api.nvim_create_user_command("LazyUrlUpdate", function() update_plugin() end, {})
+function M.setup(opts)
+  vim.api.nvim_create_user_command("LazyUrlUpdate", function() update_plugin() end, {})
+end
 
 return M
