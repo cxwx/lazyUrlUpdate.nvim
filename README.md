@@ -25,6 +25,7 @@ With [lazy.nvim](https://github.com/folke/lazy.nvim):
     opts = {},
     keys = {
         {"<leader>up", "<cmd>LazyUrlUpdate<CR>", desc = "Update plugin under cursor"},
+        {"<leader>bp", "<cmd>LazyUrlBuild<CR>", desc = "Build plugin under cursor"},
     }
 },
 ```
