@@ -50,3 +50,4 @@ Invoke it when the cursor is on the name of a repo.
 ## TODO
 
 - [ ] `xdg-open` for linux
+- [ ] string match with ` and "
