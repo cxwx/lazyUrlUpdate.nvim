@@ -9,8 +9,9 @@
 <!-- Updated: 2024/12/14 21:04:32 by chenxu           ###   ########.fr      -->
 <!--                                                                         -->
 <!-- *********************************************************************** -->
+<!-- cspell:ignore orcid -->
 
-# easy update plugins for lazy.nvim
+# Easy update plugins for lazy.nvim
 
 A NeoVim plugin to fast update plugins installed by lazy.nvim
 
@@ -20,7 +21,7 @@ With [lazy.nvim](https://github.com/folke/lazy.nvim):
 
 ```lua
 {
-    "cxwx/lazyUpdatePlugin.nvim",
+    "cxwx/lazyUrlUpdate.nvim",
     ft = "lua",
     opts = {},
     keys = {
@@ -30,7 +31,22 @@ With [lazy.nvim](https://github.com/folke/lazy.nvim):
 },
 ```
 
+## Feature
+
+* update plugin `LazyUrlUpdate`
+* rebuild plugin `LazyUrlBuild`
+* open short URL `LazyUrlOpen` (only support macOS)
+
+    - [X] `github` github:cxwx/lazyUrlUpdate.nvim/issues/1
+    - [X] `arxiv` arxiv:1803.05072
+    - [X] `doi` doi:10.1088/1742-6596/2742/1/012014
+    - [X] `orcid` orcid:0000-0001-6332-2005
+
 ## Commands
 
 The plugin provides the user command `:LazyUrlUpdate`.
 Invoke it when the cursor is on the name of a repo.
+
+## TODO
+
+- [ ] `xdg-open` for linux
