@@ -87,6 +87,58 @@ local function open_url()
   end
 end
 
+local function short_url()
+  local url = extract_string()  -- 假设 extract_string() 返回输入的 URL 字符串
+  local id = string.match(url, "https://arxiv%.org/abs/(%S+)")
+  if id then
+    local short = "arxiv:" .. id
+    vim.notify("Short URL: " .. short, vim.log.levels.INFO)
+    return short
+  end
+
+  id = string.match(url, "https://doi%.org/(%S+)")
+  if id then
+    local short = "doi:" .. id
+    vim.notify("Short URL: " .. short, vim.log.levels.INFO)
+    return short
+  end
+
+  id = string.match(url, "https://orcid%.org/(%S+)")
+  if id then
+    local short = "orcid:" .. id
+    vim.notify("Short URL: " .. short, vim.log.levels.INFO)
+    return short
+  end
+
+  id = string.match(url, "https://github%.com/(%S+)")
+  -- id = string.match(url, "https://github%.com/([^/%s]+)")
+  if id then
+    local short = "github:" .. id
+    vim.notify("Short URL: " .. short, vim.log.levels.INFO)
+    return short
+  end
+
+  vim.notify("No matching URL pattern found", vim.log.levels.WARN)
+  return url
+end
+
+local function replace_url_under_cursor()
+  local cur_word = vim.fn.expand("<cWORD>")
+  local short = short_url(cur_word)
+  if short == cur_word then
+    return
+  end
+
+  local cur_line = vim.api.nvim_get_current_line()
+  -- INFO: from GTP
+  -- local escaped_cur_word = vim.fn.escape(cur_word, "/%^$().[]*+-?")
+  -- local escaped_cur_word = vim.fn.escape(cur_word, "^$ ")
+  local escaped_cur_word = cur_word:gsub("([^%w])", "%%%1")
+  local new_line = string.gsub(cur_line, escaped_cur_word, short, 1)
+  vim.api.nvim_set_current_line(new_line)
+  vim.notify("替换为短格式: " .. short, vim.log.levels.INFO)
+end
+
 local function check_health_plugin()
   local current_word = vim.fn.expand("<cfile>")
   if current_word and current_word ~= "" then
@@ -105,6 +157,7 @@ function M.setup(_)
   vim.api.nvim_create_user_command("LazyUrlUpdate", function() update_plugin() end, {})
   vim.api.nvim_create_user_command("LazyUrlBuild", function() build_plugin() end, {})
   vim.api.nvim_create_user_command("LazyUrlOpen", function() open_url() end, {})
+  vim.api.nvim_create_user_command("LazyUrlShort", function() replace_url_under_cursor() end, {})
   vim.api.nvim_create_user_command("CheckHealth", function() check_health_plugin() end, {})
 end
 
