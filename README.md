@@ -35,7 +35,8 @@ With [lazy.nvim](https://github.com/folke/lazy.nvim):
 
 * update plugin `LazyUrlUpdate`
 * rebuild plugin `LazyUrlBuild`
-* open short URL `LazyUrlOpen` (only support macOS)
+* short URL `LazyUrlShort`
+* Open short URL `LazyUrlOpen` (only support macOS)
 
     - [X] `github` github:cxwx/lazyUrlUpdate.nvim/issues/1
     - [X] `arxiv` arxiv:1803.05072
@@ -50,4 +51,4 @@ Invoke it when the cursor is on the name of a repo.
 ## TODO
 
 - [ ] `xdg-open` for linux
-- [ ] string match with ` and "
+- [ ] string match with ` and `"`
