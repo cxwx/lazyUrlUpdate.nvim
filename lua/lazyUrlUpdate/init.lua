@@ -1,7 +1,18 @@
 -- cspell:disable
 local M = {}
 
--- TODO: 简化
+-- TODO: ADS
+-- ADS:2024ApJS..271...10W
+local url_patterns = {
+  {pattern = "https://arxiv%.org/abs/(%S+)", prefix = "arxiv:", base_url = "https://arxiv.org/abs/"},
+  {pattern = "https://doi%.org/(%S+)", prefix = "doi:", base_url = "https://doi.org/"},
+  {pattern = "https://orcid%.org/(%S+)", prefix = "orcid:", base_url = "https://orcid.org/"},
+  {pattern = "https://root%-forum%.cern%.ch/(%S+)", prefix = "rootforum:", base_url = "https://root-forum.cern.ch/"},
+  {pattern = "https://geant4%-forum%.web%.cern%.ch/t/", prefix = "geant4forum:", base_url = "https://geant4-forum.web.cern.ch/t/"},
+  {pattern = "https://ui%.adsabs%.harvard%.edu/abs/(%S+)", prefix = "ADS:", base_url = "https://ui.adsabs.harvard.edu/abs/"},
+  {pattern = "https://github%.com/(%S+)", prefix = "github:", base_url = "https://github.com/"},
+}
+-- NEEDCHECK: 简化, base on AI
 --
 local function extract_string()
   local cursor = vim.api.nvim_win_get_cursor(0)
@@ -60,63 +71,57 @@ end
 
 local function open_url()
   local strr = extract_string()
-  local arxiv_id = string.match(strr, "arxiv:(%S+)")
-  local doi_id = string.match(strr, "doi:(%S+)")
-  local orcid_id = string.match(strr, "orcid:(%S+)")
-  local github_id = string.match(strr, "github:(%S+)")
-
-  if arxiv_id then
-    local url = "https://arxiv.org/abs/" .. arxiv_id
-    vim.fn.system("open " .. url)
-    vim.notify("O arxiv: " .. url, vim.log.levels.INFO)
+  for _, entry in ipairs(url_patterns) do
+    local id = string.match(strr, entry.prefix .. "(%S+)")
+    if id then
+      local url = entry.base_url .. id
+      vim.fn.system("open " .. url)
+      vim.notify("O" .. url, vim.log.levels.INFO)
+    end
   end
-  if doi_id then
-    local url = "https://doi.org/" .. doi_id
-    vim.fn.system("open " .. url)
-    vim.notify("O doi: " .. url, vim.log.levels.INFO)
-  end
-  if orcid_id then
-    local url = "https://orcid.org/" .. orcid_id
-    vim.fn.system("open " .. url)
-    vim.notify("O orcid: " .. url, vim.log.levels.INFO)
-  end
-  if github_id then
-    local url = "https://github.com/" .. github_id
-    vim.fn.system("open " .. url)
-    vim.notify("O orcid: " .. url, vim.log.levels.INFO)
-  end
+  -- local arxiv_id = string.match(strr, "arxiv:(%S+)")
+  -- local doi_id = string.match(strr, "doi:(%S+)")
+  -- local orcid_id = string.match(strr, "orcid:(%S+)")
+  -- local github_id = string.match(strr, "github:(%S+)")
+  -- local rootforum_id = string.match(strr, "rootforum:(%S+)")
+  --
+  -- if arxiv_id then
+  --   local url = "https://arxiv.org/abs/" .. arxiv_id
+  --   vim.fn.system("open " .. url)
+  --   vim.notify("O arxiv: " .. url, vim.log.levels.INFO)
+  -- end
+  -- if doi_id then
+  --   local url = "https://doi.org/" .. doi_id
+  --   vim.fn.system("open " .. url)
+  --   vim.notify("O doi: " .. url, vim.log.levels.INFO)
+  -- end
+  -- if orcid_id then
+  --   local url = "https://orcid.org/" .. orcid_id
+  --   vim.fn.system("open " .. url)
+  --   vim.notify("O orcid: " .. url, vim.log.levels.INFO)
+  -- end
+  -- if github_id then
+  --   local url = "https://github.com/" .. github_id
+  --   vim.fn.system("open " .. url)
+  --   vim.notify("O orcid: " .. url, vim.log.levels.INFO)
+  -- end
+  -- if rootforum_id then
+  --   local url = "https://root-forum.cern.ch/" .. rootforum_id
+  --   vim.fn.system("open " .. url)
+  --   vim.notify("O root forum: " .. url, vim.log.levels.INFO)
+  -- end
 end
 
 local function short_url()
   local url = extract_string()  -- 假设 extract_string() 返回输入的 URL 字符串
-  local id = string.match(url, "https://arxiv%.org/abs/(%S+)")
+  for _, entry in ipairs(url_patterns) do
+  local id = string.match(url, entry.pattern)
   if id then
-    local short = "arxiv:" .. id
+    local short = entry.prefix .. id
     vim.notify("Short URL: " .. short, vim.log.levels.INFO)
     return short
   end
-
-  id = string.match(url, "https://doi%.org/(%S+)")
-  if id then
-    local short = "doi:" .. id
-    vim.notify("Short URL: " .. short, vim.log.levels.INFO)
-    return short
-  end
-
-  id = string.match(url, "https://orcid%.org/(%S+)")
-  if id then
-    local short = "orcid:" .. id
-    vim.notify("Short URL: " .. short, vim.log.levels.INFO)
-    return short
-  end
-
-  id = string.match(url, "https://github%.com/(%S+)")
-  -- id = string.match(url, "https://github%.com/([^/%s]+)")
-  if id then
-    local short = "github:" .. id
-    vim.notify("Short URL: " .. short, vim.log.levels.INFO)
-    return short
-  end
+end
 
   vim.notify("No matching URL pattern found", vim.log.levels.WARN)
   return url
