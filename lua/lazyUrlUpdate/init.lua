@@ -112,6 +112,18 @@ local function open_url()
   -- end
 end
 
+local function open_url_chrome()
+  local strr = extract_string()
+  for _, entry in ipairs(url_patterns) do
+    local id = string.match(strr, entry.prefix .. "(%S+)")
+    if id then
+      local url = entry.base_url .. id
+      vim.fn.system('open -b com.google.Chrome ' .. url)
+      vim.notify("O" .. url, vim.log.levels.INFO)
+    end
+  end
+end
+
 local function short_url()
   local url = extract_string()  -- 假设 extract_string() 返回输入的 URL 字符串
   for _, entry in ipairs(url_patterns) do
@@ -162,6 +174,7 @@ function M.setup(_)
   vim.api.nvim_create_user_command("LazyUrlUpdate", function() update_plugin() end, {})
   vim.api.nvim_create_user_command("LazyUrlBuild", function() build_plugin() end, {})
   vim.api.nvim_create_user_command("LazyUrlOpen", function() open_url() end, {})
+  vim.api.nvim_create_user_command("LazyUrlOpenChrome", function() open_url_chrome() end, {})
   vim.api.nvim_create_user_command("LazyUrlShort", function() replace_url_under_cursor() end, {})
   vim.api.nvim_create_user_command("CheckHealth", function() check_health_plugin() end, {})
 end

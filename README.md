@@ -36,7 +36,7 @@ With [lazy.nvim](https://github.com/folke/lazy.nvim):
 * update plugin `LazyUrlUpdate`
 * rebuild plugin `LazyUrlBuild`
 * short URL `LazyUrlShort`
-* Open short URL `LazyUrlOpen` (only support macOS)
+* Open short URL(with Chrome) `LazyUrlOpen`, `LazyUrlOpenChrome`(only support macOS)
 
     - [X] `github` github:cxwx/lazyUrlUpdate.nvim/issues/1
     - [X] `arxiv` arxiv:1803.05072
