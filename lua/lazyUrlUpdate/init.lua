@@ -11,6 +11,7 @@ local url_patterns = {
   {pattern = "https://geant4%-forum%.web%.cern%.ch/t/", prefix = "geant4forum:", base_url = "https://geant4-forum.web.cern.ch/t/"},
   {pattern = "https://ui%.adsabs%.harvard%.edu/abs/(%S+)", prefix = "ADS:", base_url = "https://ui.adsabs.harvard.edu/abs/"},
   {pattern = "https://github%.com/(%S+)", prefix = "github:", base_url = "https://github.com/"},
+  {pattern = "https://gitlab%.com/(%S+)", prefix = "gitlab:", base_url = "https://gitlab.com/"},
 }
 -- NEEDCHECK: 简化, base on AI
 --
