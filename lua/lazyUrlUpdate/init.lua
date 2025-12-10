@@ -8,7 +8,7 @@ local url_patterns = {
   {pattern = "https://doi%.org/(%S+)", prefix = "doi:", base_url = "https://doi.org/"},
   {pattern = "https://orcid%.org/(%S+)", prefix = "orcid:", base_url = "https://orcid.org/"},
   {pattern = "https://root%-forum%.cern%.ch/(%S+)", prefix = "rootforum:", base_url = "https://root-forum.cern.ch/"},
-  {pattern = "https://geant4%-forum%.web%.cern%.ch/t/", prefix = "geant4forum:", base_url = "https://geant4-forum.web.cern.ch/t/"},
+  {pattern = "https://geant4%-forum%.web%.cern%.ch/t/(%S+)", prefix = "geant4forum:", base_url = "https://geant4-forum.web.cern.ch/t/"},
   {pattern = "https://ui%.adsabs%.harvard%.edu/abs/(%S+)", prefix = "ADS:", base_url = "https://ui.adsabs.harvard.edu/abs/"},
   {pattern = "https://github%.com/(%S+)", prefix = "github:", base_url = "https://github.com/"},
   {pattern = "https://gitlab%.com/(%S+)", prefix = "gitlab:", base_url = "https://gitlab.com/"},
