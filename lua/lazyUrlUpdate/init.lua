@@ -4,14 +4,51 @@ local M = {}
 -- TODO: ADS
 -- ADS:2024ApJS..271...10W
 local url_patterns = {
-  {pattern = "https://arxiv%.org/abs/(%S+)", prefix = "arxiv:", base_url = "https://arxiv.org/abs/"},
-  {pattern = "https://doi%.org/(%S+)", prefix = "doi:", base_url = "https://doi.org/"},
-  {pattern = "https://orcid%.org/(%S+)", prefix = "orcid:", base_url = "https://orcid.org/"},
-  {pattern = "https://root%-forum%.cern%.ch/(%S+)", prefix = "rootforum:", base_url = "https://root-forum.cern.ch/"},
-  {pattern = "https://geant4%-forum%.web%.cern%.ch/t/(%S+)", prefix = "geant4forum:", base_url = "https://geant4-forum.web.cern.ch/t/"},
-  {pattern = "https://ui%.adsabs%.harvard%.edu/abs/(%S+)", prefix = "ADS:", base_url = "https://ui.adsabs.harvard.edu/abs/"},
-  {pattern = "https://github%.com/(%S+)", prefix = "github:", base_url = "https://github.com/"},
-  {pattern = "https://gitlab%.com/(%S+)", prefix = "gitlab:", base_url = "https://gitlab.com/"},
+  {
+    pattern = "https://arxiv%.org/abs/(%S+)",
+    prefix = "arxiv:",
+    base_url = "https://arxiv.org/abs/",
+  },
+  {
+    pattern = "https://doi%.org/(%S+)",
+    prefix = "doi:",
+    base_url = "https://doi.org/",
+  },
+  {
+    pattern = "https://orcid%.org/(%S+)",
+    prefix = "orcid:",
+    base_url = "https://orcid.org/",
+  },
+  {
+    pattern = "https://root%-forum%.cern%.ch/(%S+)",
+    prefix = "rootforum:",
+    base_url = "https://root-forum.cern.ch/",
+  },
+  {
+    pattern = "https://geant4%-forum%.web%.cern%.ch/t/(%S+)",
+    prefix = "geant4forum:",
+    base_url = "https://geant4-forum.web.cern.ch/t/",
+  },
+  {
+    pattern = "https://ui%.adsabs%.harvard%.edu/abs/(%S+)",
+    prefix = "ADS:",
+    base_url = "https://ui.adsabs.harvard.edu/abs/",
+  },
+  {
+    pattern = "https://github%.com/(%S+)",
+    prefix = "github:",
+    base_url = "https://github.com/",
+  },
+  {
+    pattern = "https://codeberg%.org/(%S+)",
+    prefix = "codeberg:",
+    base_url = "https://codeberg.org/",
+  },
+  {
+    pattern = "https://gitlab%.com/(%S+)",
+    prefix = "gitlab:",
+    base_url = "https://gitlab.com/",
+  },
 }
 -- NEEDCHECK: 简化, base on AI
 --
