@@ -1,19 +1,7 @@
-<!-- *********************************************************************** -->
-<!--                                                                         -->
-<!--                                                      :::      ::::::::  -->
-<!-- README.md                                          :+:      :+:    :+:  -->
-<!--                                                  +:+ +:+         +:+    -->
-<!-- By: chenxu <chenxu@mail.ustc.edu.cn>           +#+  +:+       +#+       -->
-<!--                                              +#+#+#+#+#+   +#+          -->
-<!-- Created: 2024/12/14 20:43:55 by chenxu            #+#    #+#            -->
-<!-- Updated: 2024/12/14 21:04:32 by chenxu           ###   ########.fr      -->
-<!--                                                                         -->
-<!-- *********************************************************************** -->
-<!-- cspell:ignore orcid -->
 
-# Easy update plugins for lazy.nvim
+# Easy Update Plugins For `lazy.nvim`
 
-A NeoVim plugin to fast update plugins installed by lazy.nvim
+A Neovim plugin to fast update plugins installed by lazy.nvim
 
 ## Installation
 
@@ -21,7 +9,8 @@ With [lazy.nvim](https://github.com/folke/lazy.nvim):
 
 ```lua
 {
-    "cxwx/lazyUrlUpdate.nvim",
+    -- "cxwx/lazyUrlUpdate.nvim", -- github plugin will be removed soon.
+    url = "https://codeberg.org/chenxu/lazyUrlUpdate.nvim",
     ft = "lua",
     opts = {},
     keys = {
@@ -36,20 +25,23 @@ With [lazy.nvim](https://github.com/folke/lazy.nvim):
 * update plugin `LazyUrlUpdate`
 * rebuild plugin `LazyUrlBuild`
 * short URL `LazyUrlShort`
-* Open short URL(with Chrome) `LazyUrlOpen`, `LazyUrlOpenChrome`(only support macOS)
+* Open short URL with Chrome `LazyUrlOpen`, `LazyUrlOpenChrome`(only macOS)
 
+```org
     - [X] `github` github:cxwx/lazyUrlUpdate.nvim/issues/1
     - [X] gitlab gitlab:...
     - [X] `arxiv` arxiv:1803.05072
     - [X] `doi` doi:10.1088/1742-6596/2742/1/012014
     - [X] `orcid` orcid:0000-0001-6332-2005
+    - [X] codeberg codeberg:chenxu/lazyUrlUpdate.nvim
+```
 
 ## Commands
 
 The plugin provides the user command `:LazyUrlUpdate`.
 Invoke it when the cursor is on the name of a repo.
 
-## TODO
+## To Do
 
-- [ ] `xdg-open` for linux
-- [ ] string match with ` and `"`
+- [ ] `xdg-open` for Linux
+- [ ] string match with \` and `"`
