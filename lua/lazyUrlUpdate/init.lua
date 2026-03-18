@@ -5,6 +5,11 @@ local M = {}
 -- ADS:2024ApJS..271...10W
 local url_patterns = {
   {
+    pattern = "https://neovim%.io/(%S+)",
+    prefix = "neovim:",
+    base_url = "https://neovim.io/",
+  },
+  {
     pattern = "https://arxiv%.org/abs/(%S+)",
     prefix = "arxiv:",
     base_url = "https://arxiv.org/abs/",
@@ -168,7 +173,7 @@ local function short_url()
   local id = string.match(url, entry.pattern)
   if id then
     local short = entry.prefix .. id
-    vim.notify("Short URL: " .. short, vim.log.levels.INFO)
+    vim.notify("Shorter URL: " .. short, vim.log.levels.INFO)
     return short
   end
 end
@@ -191,7 +196,7 @@ local function replace_url_under_cursor()
   local escaped_cur_word = cur_word:gsub("([^%w])", "%%%1")
   local new_line = string.gsub(cur_line, escaped_cur_word, short, 1)
   vim.api.nvim_set_current_line(new_line)
-  vim.notify("替换为短格式: " .. short, vim.log.levels.INFO)
+  -- vim.notify("替换为短格式: " .. short, vim.log.levels.INFO)
 end
 
 local function check_health_plugin()
