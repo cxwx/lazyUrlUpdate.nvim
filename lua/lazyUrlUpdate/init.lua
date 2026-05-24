@@ -40,9 +40,15 @@ local url_patterns = {
     base_url = "https://ui.adsabs.harvard.edu/abs/",
   },
   {
+    -- BUG: https://github.com/akira-okumura/PyTeVCat  open in a markdown file not worked?
     pattern = "https://github%.com/(%S+)",
     prefix = "github:",
     base_url = "https://github.com/",
+  },
+  {
+    pattern = "https://bitbucket%.org/(%S+)",
+    prefix = "bitbucket:",
+    base_url = "https://bitbucket.org/",
   },
   {
     pattern = "https://codeberg%.org/(%S+)",

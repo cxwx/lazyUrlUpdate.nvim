@@ -34,6 +34,7 @@ With [lazy.nvim](https://github.com/folke/lazy.nvim):
     - [X] doi doi:10.1088/1742-6596/2742/1/012014
     - [X] orcid orcid:0000-0001-6332-2005
     - [X] codeberg codeberg:chenxu/lazyUrlUpdate.nvim
+    - [X] bitbucket bitbucket:dtsarkov/factplusplus
 ```
 
 ## Commands
