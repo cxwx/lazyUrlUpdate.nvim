@@ -88,6 +88,85 @@ local function get_plugin_name()
   return false
 end
 
+--- 从光标所在的(必要时逐层向外)lazy.nvim plugin spec 表里提取 URL。
+--- 优先级: url = "..." > "owner/repo"(补成 https://github.com/...)。
+--- 命中 dir = "..."(本地插件)则放弃;字符串/注释里的 {} 不参与配对,可能误判。
+local function get_plugin_url()
+  local view = vim.fn.winsaveview()
+  local result
+
+  for _ = 1, 20 do
+    local open = vim.fn.searchpairpos("{", "", "}", "bnW")
+    if open[1] == 0 then break end
+    local close = vim.fn.searchpairpos("{", "", "}", "nW")
+    if close[1] == 0 then break end
+
+    local lines = vim.api.nvim_buf_get_lines(0, open[1] - 1, close[1], false)
+    local block = table.concat(lines, "\n")
+
+    local url = block:match("url%s*=%s*[\"']([^\"']+)[\"']")
+    if url then
+      result = url
+      break
+    end
+    -- 本地插件:有 dir 字段,没有远程 url
+    if block:match("dir%s*=%s*[\"']") then break end
+    -- 默认:owner/repo 字符串 -> github
+    local repo = block:match("[\"']([%w_%-.]+/[%w_%-.]+)[\"']")
+    if repo then
+      result = "https://github.com/" .. repo
+      break
+    end
+    -- 本层没有,光标挪到当前 { 左侧,继续找更外层的表
+    vim.api.nvim_win_set_cursor(0, { open[1], math.max(0, open[2] - 2) })
+  end
+
+  vim.fn.winrestview(view)
+  return result
+end
+
+--- 根据 plugin spec 的 url + 光标处的 #N,自动打开 issue/PR/discussion。
+--- 支持 ISSUE:#1 / pull #2 / DISCUSSION:#3 —— 前缀可大写,冒号或空格分隔,也可无前缀(默认 issue)。
+--- 前缀词决定类型: pr/pull -> pull, discuss/discussion -> discussions, 其余 -> issues。
+--- 跨平台路径: github pull, codeberg pulls, bitbucket pull-requests;issues 通用。
+local function open_url_ext()
+  local base = get_plugin_url()
+  if not base then
+    vim.notify("No plugin url found under cursor {}", vim.log.levels.WARN)
+    return
+  end
+  base = base:gsub("/+$", "")
+
+  local line = vim.api.nvim_get_current_line()
+  local col = vim.api.nvim_win_get_cursor(0)[2] + 1
+  local host = base:match("^https?://([^/]+)") or ""
+
+  local num, path
+  local best = math.huge
+  for word, hpos, n in line:gmatch("(%a*)[%s:]-()#(%d+)") do
+    local w = word:lower()
+    local p = "issues"
+    if w == "pr" or w == "pull" then
+      p = host:find("codeberg") and "pulls" or host:find("bitbucket") and "pull-requests" or "pull"
+    elseif w == "discuss" or w == "discussion" then
+      p = "discussions"
+    end
+    local dist = math.abs(col - hpos)
+    if dist < best then
+      best, num, path = dist, n, p
+    end
+  end
+
+  if not num then
+    vim.notify("No #N found on this line", vim.log.levels.WARN)
+    return
+  end
+
+  local url = base .. "/" .. path .. "/" .. num
+  vim.fn.system("open " .. url)
+  vim.notify(url, vim.log.levels.INFO)
+end
+
 local function update_plugin()
   local current_word = vim.fn.expand("<cfile>")
   if current_word and current_word ~= "" then
@@ -225,6 +304,7 @@ function M.setup(_)
   vim.api.nvim_create_user_command("LazyUrlOpen", function() open_url() end, {})
   vim.api.nvim_create_user_command("LazyUrlOpenChrome", function() open_url_chrome() end, {})
   vim.api.nvim_create_user_command("LazyUrlShort", function() replace_url_under_cursor() end, {})
+  vim.api.nvim_create_user_command("LazyUrlOpenExt", function() open_url_ext() end, {})
   vim.api.nvim_create_user_command("CheckHealth", function() check_health_plugin() end, {})
 end
 
