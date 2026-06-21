@@ -26,7 +26,8 @@ With [lazy.nvim](https://github.com/folke/lazy.nvim):
 * rebuild plugin `LazyUrlBuild`
 * short URL `LazyUrlShort`
 * Open short URL with Chrome `LazyUrlOpen`, `LazyUrlOpenChrome`(only macOS)
-* open issue/PR/discussion of current plugin `LazyUrlOpenExt` (spec url + `ISSUE:#1` / `#N` under cursor)
+* short issue URL `LazyUrlShortExt` (`https://github.com/o/r/issues/42` -> `ISSUE:#42`; also PR:# / DISCUSSION:#)
+* open issue/PR/discussion `LazyUrlOpenExt` (`ISSUE:#42` / `PR:#42` / `DISCUSSION:#42` under cursor, repo from plugin spec; github only)
 
 ```org
     - [X] github github:cxwx/lazyUrlUpdate.nvim/issues/1

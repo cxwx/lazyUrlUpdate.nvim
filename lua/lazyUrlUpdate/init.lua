@@ -125,44 +125,57 @@ local function get_plugin_url()
   return result
 end
 
---- 根据 plugin spec 的 url + 光标处的 #N,自动打开 issue/PR/discussion。
---- 支持 ISSUE:#1 / pull #2 / DISCUSSION:#3 —— 前缀可大写,冒号或空格分隔,也可无前缀(默认 issue)。
---- 前缀词决定类型: pr/pull -> pull, discuss/discussion -> discussions, 其余 -> issues。
---- 跨平台路径: github pull, codeberg pulls, bitbucket pull-requests;issues 通用。
+--- 把光标处的 github issue/PR/discussion 完整 URL 缩成 ISSUE:#N / PR:#N / DISCUSSION:#N。
+--- 例: https://github.com/owner/repo/issues/42 -> ISSUE:#42
+local function short_url_ext()
+  local token = extract_string()
+  local kind, num = token:match("github%.com/[%w_%-.]+/[%w_%-.]+/(%w+)/(%d+)")
+  local prefix
+  if kind == "issues" then prefix = "ISSUE"
+  elseif kind == "pull" then prefix = "PR"
+  elseif kind == "discussions" then prefix = "DISCUSSION" end
+
+  if not prefix then
+    vim.notify("No github issue/PR/discussion URL under cursor", vim.log.levels.WARN)
+    return
+  end
+
+  local short = prefix .. ":#" .. num
+  local cur_word = vim.fn.expand("<cWORD>")
+  if cur_word ~= "" then
+    local cur_line = vim.api.nvim_get_current_line()
+    local escaped = cur_word:gsub("([^%w])", "%%%1")
+    local new_line = string.gsub(cur_line, escaped, short, 1)
+    vim.api.nvim_set_current_line(new_line)
+  end
+  vim.fn.setreg("+", short)
+  vim.notify(short .. "  (yanked)", vim.log.levels.INFO)
+end
+
+--- 打开光标处的 ISSUE:#N / PR:#N / DISCUSSION:#N(或裸 #N)。
+--- repo 取自光标所在 plugin spec;Ext 系列默认 github。
 local function open_url_ext()
+  local token = extract_string()
+  local prefix, num = token:match("(%a+):#(%d+)")
+  if not num then num = token:match("#(%d+)") end
+  if not num then
+    vim.notify("No ISSUE:#N under cursor", vim.log.levels.WARN)
+    return
+  end
+
   local base = get_plugin_url()
   if not base then
     vim.notify("No plugin url found under cursor {}", vim.log.levels.WARN)
     return
   end
-  base = base:gsub("/+$", "")
+  local repo = base:match("^https?://[^/]+/([%w_%-.]+/[%w_%-.]+)") or base
 
-  local line = vim.api.nvim_get_current_line()
-  local col = vim.api.nvim_win_get_cursor(0)[2] + 1
-  local host = base:match("^https?://([^/]+)") or ""
+  local path = "issues"
+  local p = prefix and prefix:lower() or ""
+  if p == "pr" or p == "pull" then path = "pull"
+  elseif p == "discuss" or p == "discussion" then path = "discussions" end
 
-  local num, path
-  local best = math.huge
-  for word, hpos, n in line:gmatch("(%a*)[%s:]-()#(%d+)") do
-    local w = word:lower()
-    local p = "issues"
-    if w == "pr" or w == "pull" then
-      p = host:find("codeberg") and "pulls" or host:find("bitbucket") and "pull-requests" or "pull"
-    elseif w == "discuss" or w == "discussion" then
-      p = "discussions"
-    end
-    local dist = math.abs(col - hpos)
-    if dist < best then
-      best, num, path = dist, n, p
-    end
-  end
-
-  if not num then
-    vim.notify("No #N found on this line", vim.log.levels.WARN)
-    return
-  end
-
-  local url = base .. "/" .. path .. "/" .. num
+  local url = "https://github.com/" .. repo .. "/" .. path .. "/" .. num
   vim.fn.system("open " .. url)
   vim.notify(url, vim.log.levels.INFO)
 end
@@ -305,6 +318,7 @@ function M.setup(_)
   vim.api.nvim_create_user_command("LazyUrlOpenChrome", function() open_url_chrome() end, {})
   vim.api.nvim_create_user_command("LazyUrlShort", function() replace_url_under_cursor() end, {})
   vim.api.nvim_create_user_command("LazyUrlOpenExt", function() open_url_ext() end, {})
+  vim.api.nvim_create_user_command("LazyUrlShortExt", function() short_url_ext() end, {})
   vim.api.nvim_create_user_command("CheckHealth", function() check_health_plugin() end, {})
 end
 
