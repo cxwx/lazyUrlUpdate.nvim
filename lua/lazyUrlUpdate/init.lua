@@ -154,6 +154,9 @@ end
 
 --- 打开光标处的 ISSUE:#N / PR:#N / DISCUSSION:#N(或裸 #N)。
 --- repo 取自光标所在 plugin spec;Ext 系列默认 github。
+--- 前缀归并到 github 路径(白名单):
+---   ISSUE/NOTPLANNING/SOLVED/FUTURED -> issues,  PR/PULL -> pull,  DISCUSS/DISCUSSION -> discussions。
+--- 不在白名单里的前缀视为未识别、不打开;裸 #N(无前缀)仍按 issue 打开。
 local function open_url_ext()
   local token = extract_string()
   local prefix, num = token:match("(%a+):#(%d+)")
@@ -170,10 +173,21 @@ local function open_url_ext()
   end
   local repo = base:match("^https?://[^/]+/([%w_%-.]+/[%w_%-.]+)") or base
 
-  local path = "issues"
+  -- 前缀白名单 -> github 路径;不在白名单的前缀(如 FOO:#1)不打开
   local p = prefix and prefix:lower() or ""
-  if p == "pr" or p == "pull" then path = "pull"
-  elseif p == "discuss" or p == "discussion" then path = "discussions" end
+  local path
+  if p == "issue" or p == "notplanning" or p == "solved" or p == "futured" then
+    path = "issues"
+  elseif p == "pr" or p == "pull" then
+    path = "pull"
+  elseif p == "discuss" or p == "discussion" then
+    path = "discussions"
+  elseif p == "" then
+    path = "issues"  -- 裸 #N
+  else
+    vim.notify("Unknown prefix: " .. (prefix or "?") .. ":#" .. num, vim.log.levels.WARN)
+    return
+  end
 
   local url = "https://github.com/" .. repo .. "/" .. path .. "/" .. num
   vim.fn.system("open " .. url)
