@@ -9,8 +9,7 @@ With [lazy.nvim](https://github.com/folke/lazy.nvim):
 
 ```lua
 {
-    -- "cxwx/lazyUrlUpdate.nvim", -- github plugin will be removed soon.
-    url = "https://codeberg.org/chenxu/lazyUrlUpdate.nvim",
+    "cxwx/lazyUrlUpdate.nvim", -- github plugin will be removed soon.
     ft = "lua",
     opts = {},
     keys = {
@@ -35,7 +34,7 @@ With [lazy.nvim](https://github.com/folke/lazy.nvim):
     - [X] arxiv arxiv:1803.05072
     - [X] doi doi:10.1088/1742-6596/2742/1/012014
     - [X] orcid orcid:0000-0001-6332-2005
-    - [X] codeberg codeberg:chenxu/lazyUrlUpdate.nvim
+    - [X] codeberg codeberg:cxwx/lazyUrlUpdate.nvim
     - [X] bitbucket bitbucket:dtsarkov/factplusplus
 ```
 
